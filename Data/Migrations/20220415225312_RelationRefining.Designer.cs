@@ -3,6 +3,7 @@ using System;
 using ASP.NET_Student_Book.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP.NET_Student_Book.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220415225312_RelationRefining")]
+    partial class RelationRefining
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
@@ -45,8 +47,8 @@ namespace ASP.NET_Student_Book.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("CourseId");
 
@@ -63,7 +65,7 @@ namespace ASP.NET_Student_Book.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("ClassId")
+                    b.Property<int>("ClassId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("CourseId")
@@ -79,8 +81,8 @@ namespace ASP.NET_Student_Book.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Weight")
                         .HasColumnType("INTEGER");
@@ -125,11 +127,8 @@ namespace ASP.NET_Student_Book.Data.Migrations
                     b.Property<int>("GradeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ReceivedMark")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("MarkId");
 
@@ -142,9 +141,9 @@ namespace ASP.NET_Student_Book.Data.Migrations
 
             modelBuilder.Entity("ASP.NET_Student_Book.Models.Student", b =>
                 {
-                    b.Property<int>("StudentId")
+                    b.Property<Guid>("StudentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ClassId")
                         .HasColumnType("INTEGER");
@@ -172,9 +171,9 @@ namespace ASP.NET_Student_Book.Data.Migrations
 
             modelBuilder.Entity("ASP.NET_Student_Book.Models.Teacher", b =>
                 {
-                    b.Property<int>("TeacherId")
+                    b.Property<Guid>("TeacherId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -412,9 +411,11 @@ namespace ASP.NET_Student_Book.Data.Migrations
 
             modelBuilder.Entity("ASP.NET_Student_Book.Models.Grade", b =>
                 {
-                    b.HasOne("ASP.NET_Student_Book.Models.Class", null)
+                    b.HasOne("ASP.NET_Student_Book.Models.Class", "Class")
                         .WithMany("Grades")
-                        .HasForeignKey("ClassId");
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ASP.NET_Student_Book.Models.Course", "Course")
                         .WithMany("Grades")
@@ -431,6 +432,8 @@ namespace ASP.NET_Student_Book.Data.Migrations
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Class");
 
                     b.Navigation("Course");
 

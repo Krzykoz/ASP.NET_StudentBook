@@ -4,7 +4,7 @@ namespace ASP.NET_Student_Book.Models;
 
 public class Student
 {
-    public Guid StudentId { get; set; }
+    public int StudentId { get; set; }
     public String FirstName { get; set; }
     public String LastName { get; set; }
     public int ClassId { get; set; }
@@ -12,4 +12,7 @@ public class Student
 
     public Class Class { get; set; }
     public IdentityUser IdentityUser { get; set; }
+    
+    public ICollection<Mark> Marks { get; set; }
+
 }
